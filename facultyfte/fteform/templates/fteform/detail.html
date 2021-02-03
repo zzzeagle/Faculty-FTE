@@ -1,0 +1,17 @@
+<h1>{{ faculty.name }}</h1>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form action="{% url 'fteform:add' faculty.id %}" method="post"}>
+    {% csrf_token %}
+    <table>
+    {% for fte in faculty.fte_set.all %}
+    <tr>
+        <td>{{ fte.clinicalFTE }}</td>
+        <td>{{ fte.appointmentFTE }}</td>
+     </tr>
+    {% endfor %}
+     <td><input type="text" name="newAppointmentFTE"></td>
+     <td><input type="text" name="newClinicalFTE"></td>
+    </table>
+    <input type="submit" value="Add">
+</form>
+{{ faculty.netid }}

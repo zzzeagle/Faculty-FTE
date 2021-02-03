@@ -1,0 +1,10 @@
+<form action="{% url 'fteform:newFaculty' %}" method="post"}>
+    {% csrf_token %}
+    <table>
+     <td><input type="text" name="newFacultyName"></td>
+     <td><input type="text" name="newFacultyNetid"></td>
+     <td><input type="text" name="newAppointmentFTE"></td>
+     <td><input type="text" name="newClinicalFTE"></td>
+    </table>
+    <input type="submit" value="Create New Faculty">
+</form>

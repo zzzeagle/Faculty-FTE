@@ -1,0 +1,9 @@
+{% if recent_faculty %}
+    <ul>
+    {% for faculty in recent_faculty %}
+        <li><a href="{% url 'fteform:detail' faculty.id %}">{{ faculty.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No faculty are available.</p>
+{% endif %}
