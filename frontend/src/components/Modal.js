@@ -30,14 +30,15 @@
         };
 
         render() {
-            const { toggle, onSave } = this.props;
+            const { toggle, onSave, onSaveFTE } = this.props;
+            console.log(this);
             return (
-                <Modal isOpen={true} toggle={toggle}>
-                    <ModalHeader toggle={toggle}>Faculty</ModalHeader>
+                <Modal isOpen={true}>
+                    <ModalHeader>Faculty</ModalHeader>
                     <ModalBody>
                         <Form>
                             <FormGroup>
-                                <Label for="netid">Title</Label>
+                                <Label for="netid">NetID</Label>
                                 <Input
                                     type="text"
                                     name="netid"
@@ -47,7 +48,7 @@
                                  />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="name">Title</Label>
+                                <Label for="name">Name</Label>
                                 <Input
                                     type="text"
                                     name="name"
@@ -56,22 +57,23 @@
                                     placeholder="Enter Name"
                                  />
                             </FormGroup>
-                            <FormGroup check>
-                              <Label for="active">
+                            <FormGroup>
+                                <Label for="appointmentFTE">Name</Label>
                                 <Input
-                                  type="checkbox"
-                                  name="active"
-                                  checked={this.state.activeItem.active}
-                                  onChange={this.handleChange}
-                                />
-                                Completed
-                              </Label>
+                                    type="text"
+                                    name="appointmentFTE"
+                                    value={this.state.activeItem.appointmentFTE}
+                                    onChange={this.handleChange}
+                                 />
                             </FormGroup>
                         </Form>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="success" onClick={() => onSave(this.state.activeItem)}>
                         Save
+                      </Button>
+                      <Button color="success" onClick={() => onSaveFTE(this.state.activeItem)}>
+                      Save FTE
                       </Button>
                     </ModalFooter>
                   </Modal>

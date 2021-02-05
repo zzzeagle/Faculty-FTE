@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.template import loader
 from rest_framework import viewsets
-from .serializers import FacultySerializer
+from .serializers import FacultySerializer, FTESerializer
 
 from .models import Faculty, FTE
 
@@ -12,6 +12,11 @@ from .models import Faculty, FTE
 class FacultyView(viewsets.ModelViewSet):
     serializer_class = FacultySerializer
     queryset = Faculty.objects.all()
+
+
+class FTEView(viewsets.ModelViewSet):
+    serializer_class = FTESerializer
+    queryset = FTE.objects.all()
 
 
 def index(request):

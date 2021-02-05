@@ -21,6 +21,7 @@ from fteform import views
 
 router = routers.DefaultRouter()
 router.register(r'faculty', views.FacultyView, 'faculty')
+router.register(r'fte', views.FTEView, 'fte')
 
 urlpatterns = [
     path('api/', include(router.urls)),

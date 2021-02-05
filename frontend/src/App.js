@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
+
 import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
@@ -10,7 +11,6 @@ class App extends Component {
         super(props);
         this.state = {
             modal: false,
-            active: false,
             activeItem:{
                 netid:"",
                 name:""
@@ -29,38 +29,53 @@ class App extends Component {
           .then(res => this.setState({ facultyList: res.data }))
           .catch(err => console.log(err));
       };
-    toggle = () => {
-        this.setState({ modal: !this.state.modal });
-    };
     displayInactive= status => {
         if (status) {
           return this.setState({ active: true });
         }
         return this.setState({ active: false });
     };
-  handleSubmit = item => {
-    this.toggle();
-    if (item.id){
-        axios
+      toggle = () => {
+        this.setState({ modal: !this.state.modal });
+      };
+      handleSubmit = item => {
+        this.toggle();
+        console.log(typeof(item));
+        if (item.id) {
+          axios
             .put(`http://localhost:8000/api/faculty/${item.id}/`, item)
             .then(res => this.refreshList());
-    }
-    axios
-        .post("http://localhost:8000/api/faculty/", item)
-        .then(res => this.refreshList());
-  };
-  handleDelete = item => {
-    axios
-        .delete(`http://localhost:8000/api/faculty/${item.id}/`)
-        .then(res => this.refreshList());
-  };
-  createItem = () => {
-    const item = { title: "", description: "", completed: false };
-    this.setState({ activeItem: item, modal: !this.state.modal });
-  };
-  editItem = item => {
-    this.setState({ activeItem: item, modal: !this.state.modal });
-  };
+          return;
+        }
+        axios
+          .post("http://localhost:8000/api/faculty/", item)
+          .then(res => this.refreshList());
+      };
+     handleFTESubmit = item => {
+        this.toggle();
+        console.log(typeof(item));
+        if (item.id) {
+          axios
+            .put(`http://localhost:8000/api/fte/${item.id}/`, item)
+            .then(res => this.refreshList());
+          return;
+        }
+        axios
+          .post("http://localhost:8000/api/fte/", item)
+          .then(res => this.refreshList());
+      };
+      handleDelete = item => {
+        axios
+          .delete(`http://localhost:8000/api/faculty/${item.id}`)
+          .then(res => this.refreshList());
+      };
+      createItem = () => {
+        const item = { title: "", description: "", completed: false };
+        this.setState({ activeItem: item, modal: !this.state.modal });
+      };
+      editItem = item => {
+        this.setState({ activeItem: item, modal: !this.state.modal });
+      };
 
 renderTabList = () => {
     return (
@@ -69,24 +84,57 @@ renderTabList = () => {
     );
 };
 
+renderFTE = (fte) => {
+    return fte.map(item => (
+        <tr>
+            <td>{item.effectiveFrom}</td>
+            <td>{item.effectiveTo}</td>
+            <td>{item.appointmentFTE}</td>
+            <td>{item.clinicalFTE}</td>
+            <td>
+                <button
+                    onClick={() => this.editItem(item)}
+                    className="btn btn-secondary mr-2"
+                >
+                Edit
+                </button>
+            </td>
+        </tr>
+    ));
+
+}
+
 renderItems = () => {
     const { active } = this.state;
-    const faculty = this.state.facultyList.filter(
-          item => item.active === active
-     );
-
+    const faculty = this.state.facultyList;
     return faculty.map(item => (
+    <div>
     <li
         key={item.id}
         className="list-group-item d-flex justify-content-between align-items-center"
      >
-     <span
+    <span
         className={'faculty-name mr-2'}
         title={item.netid}
         >
         {item.name}
-     </span>
-     <span>
+    </span>
+    <span
+        className={'faculty-name mr-2'}
+        >
+        {item.netid}
+    </span>
+    <span>
+          <button
+            className="btn btn-secondary mr-2"
+            data-toggle="collapse"
+            href={"#details-"+item.id}
+            role="button"
+            aria-expanded="false"
+            aria-controls={"details-"+item.id}
+          >
+            Details
+          </button>
           <button
             onClick={() => this.editItem(item)}
             className="btn btn-secondary mr-2"
@@ -101,6 +149,19 @@ renderItems = () => {
           </button>
     </span>
      </li>
+     <span className="collapse" id={"details-"+item.id}>
+        <table class="table">
+            <tr>
+                <th>Effective From</th>
+                <th>Effective To</th>
+                <th>Appointment FTE</th>
+                <th>Clinical FTE</th>
+            </tr>
+        {this.renderFTE(item.fte)}
+        </table>
+        <button className="btn btn-primary">Propose FTE Change</button>
+    </span>
+    </div>
     ));
 };
 render() {
@@ -123,8 +184,8 @@ render() {
             {this.state.modal ? (
               <Modal
                 activeItem={this.state.activeItem}
-                toggle={this.toggle}
                 onSave={this.handleSubmit}
+                onSaveFTE={this.handleFTESubmit}
               />
             ) : null}
           </main>

@@ -9,7 +9,7 @@ class FTEInline(admin.TabularInline):
     extra = 3
 
 class FacultyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'netid','active')
+    list_display = ('name', 'netid')
     inlines = [FTEInline]
 
 
